@@ -1,56 +1,35 @@
 
+module.exports = {
+  ...(typeof createLoginTracker !== 'undefined' && { createLoginTracker })
+};
 
-
-// module.exports = {
-//   ...(typeof createLoginTracker !== 'undefined' && { createLoginTracker })
-// };
-
-
-//Initialize log in feature with the  object userInfo as a parameter. 
-
- let userInfo = {
-    username:"user1",
-    password:"password123"
-  }
-
+//Define outer function 
 function createLoginTracker(userInfo){
 
+// Initialize login tracker
+    let attemptCount = 0; 
 
-//   //Initialize login tracker
-  let attemptCount = 1; 
-
-//   //Create arrow fuction to handle login attempts 
-
-  let userLogin=(passwordAttempt)=>{
-
-    for (attemptCount; attemptCount<=3 && userInfo.password!==passwordAttempt; attemptCount++){
-      const prompt = require('prompt-sync')();
-      console.log(`Kindly enter the password`)
-      passwordAttempt=prompt("Enter the password: ");
-
-      if(userInfo.password===passwordAttempt){
-        console.log("Login successful")
-        break;
-      }else if(userInfo.password!==passwordAttempt){
-        let attempts = 3;
-        console.log(`Login failed.You have ${attempts - attemptCount} attempts left`);
-
-        if(attemptCount===3){
-          console.log(` Due to ${attemptCount} log in attempts your account is locked`)
-
-        }
-        
-      }
-
-
-    } 
+// Create arrow fuction to handle login attempts 
+    return (passwordAttempt)=>{
+    //Increment attempt count on each login attempt
+    attemptCount++;
+    //Check password matches and attempt count is less than 4
+    if(passwordAttempt===userInfo.password && attemptCount<4){
+      return `Login successful`;
+    }else if(passwordAttempt!==userInfo.password && attemptCount<4){
+      return `Attempt ${attemptCount}: Login failed`;
+    }else if(passwordAttempt!==userInfo.password && attemptCount===4){
+      return `Account locked due to too many failed login attempts`;
+    }
     
-     
+
+    }
+
+  }
+
     
-  } 
 
-   return userLogin();
-}
 
-createLoginTracker(userInfo);
+
+
 
